@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package rsias.v1;
+
+option go_package = "github.com/rsias/proto/v1";
+
+// MarketDataService for synchronous internal queries (e.g., from Node.js BFF to Go)
+service MarketDataService {
+  rpc GetLatestPrice (GetLatestPriceRequest) returns (PriceResponse);
+  rpc GetSentimentTrend (GetSentimentRequest) returns (SentimentTrendResponse);
+}
+
+message GetLatestPriceRequest {
+  string symbol = 1;
+}
+
+message PriceResponse {
+  string symbol = 1;
+  double price = 2;
+  int64 timestamp = 3;
+  double change_percent = 4;
+}
+
+message GetSentimentRequest {
+  string symbol = 1;
+  int32 limit = 2;
+}
+
+message SentimentTrendResponse {
+  string symbol = 1;
+  repeated SentimentReport reports = 2;
+}
+
+message SentimentReport {
+  double score = 1;
+  string label = 2;
+  string rationale = 3;
+  int64 timestamp = 4;
+}

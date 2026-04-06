@@ -1,0 +1,44 @@
+{
+  "websocket_api": "v1",
+  "endpoint": "ws://api.rsias.com/v1/stream",
+  "messages": {
+    "price_update": {
+      "type": "TICK",
+      "payload": {
+        "symbol": "string",
+        "price": "number",
+        "volume": "number",
+        "timestamp": "iso_date",
+        "change_percent": "number"
+      }
+    },
+    "news_update": {
+      "type": "NEWS",
+      "payload": {
+        "id": "uuid",
+        "title": "string",
+        "source": "string",
+        "published_at": "iso_date",
+        "related_tickers": ["string"],
+        "sentiment_score": "number (-1.0 to 1.0)",
+        "sentiment_label": "string (BULLISH|BEARISH|NEUTRAL)"
+      }
+    },
+    "macro_risk": {
+      "type": "MACRO_RISK",
+      "payload": {
+        "ticker": "string",
+        "event": "string",
+        "impact": "string (LOW|MEDIUM|HIGH)",
+        "summary": "string"
+      }
+    },
+    "client_subscription": {
+      "type": "SUBSCRIBE",
+      "payload": {
+        "tickers": ["string"],
+        "topics": ["TICK", "NEWS", "MACRO_RISK"]
+      }
+    }
+  }
+}

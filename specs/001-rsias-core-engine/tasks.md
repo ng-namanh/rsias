@@ -17,11 +17,11 @@
 
 **Purpose**: Project initialization and cross-language structure
 
-- [ ] T001 Create project structure (backend/, ai-worker/, frontend/, shared/proto/) per implementation plan
-- [ ] T002 Initialize Go module and basic dependencies in backend/go.mod
-- [ ] T003 Initialize Python environment and dependencies using `uv` in ai-worker/pyproject.toml
-- [ ] T004 Initialize React Vite project with TypeScript in frontend/
-- [ ] T005 [P] Define shared gRPC Protobuf contracts in shared/proto/market_data.proto
+- [X] T001 Create project structure (backend/, ai-worker/, frontend/, shared/proto/) per implementation plan
+- [X] T002 Initialize Go module and basic dependencies in backend/go.mod
+- [X] T003 Initialize Python environment and dependencies using `uv` in ai-worker/pyproject.toml
+- [X] T004 Initialize React Vite project with TypeScript in frontend/
+- [X] T005 [P] Define shared gRPC Protobuf contracts in shared/proto/market_data.proto
 
 ---
 
@@ -31,12 +31,12 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Configure Docker Compose for Kafka, PostgreSQL (with TimescaleDB/pgvector), and Redis in docker-compose.yml
-- [ ] T007 Implement database migrations for Hypertables (ticks) and Vector columns (embeddings) in backend/migrations/
-- [ ] T008 [P] Implement Go Kafka producer utility in backend/internal/services/kafka_producer.go
-- [ ] T009 [P] Implement Python Kafka consumer base in ai-worker/src/shared/kafka_consumer.py
-- [ ] T010 [P] Implement Go gRPC server for internal service communication in backend/internal/grpc/server.go
-- [ ] T011 [P] Implement Redis client for caching price snapshots in backend/internal/services/redis_client.go
+- [X] T006 Configure Docker Compose for Kafka, PostgreSQL (with TimescaleDB/pgvector), and Redis in docker-compose.yml
+- [X] T007 Implement database migrations for Hypertables (ticks) and Vector columns (embeddings) in backend/migrations/
+- [X] T008 [P] Implement Go Kafka producer utility in backend/internal/services/kafka_producer.go
+- [X] T009 [P] Implement Python Kafka consumer base in ai-worker/src/shared/kafka_consumer.py
+- [X] T010 [P] Implement Go gRPC server for internal service communication in backend/internal/grpc/server.go
+- [X] T011 [P] Implement Redis client for caching price snapshots in backend/internal/services/redis_client.go
 
 **Checkpoint**: Foundation ready - infrastructure services are live and internal communication is possible.
 

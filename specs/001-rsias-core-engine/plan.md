@@ -11,7 +11,7 @@ Implement a high-performance, two-language microservices system for real-time st
 **Language/Version**: 
 - **Golang**: 1.21+ (API Gateway, BFF, WebSockets, Core Logic)
 - **Python**: 3.11+ (AI/NLP/RAG Pipelines)
-- **React**: (Vite) Frontend
+- **React**: (Vite) Frontend (Bun)
 **Primary Dependencies**: 
 - **Messaging**: Apache Kafka (Durable event streaming)
 - **Communication**: gRPC (Protobuf), WebSockets (Go-native)
@@ -23,7 +23,7 @@ Implement a high-performance, two-language microservices system for real-time st
 **Testing**: 
 - **Go**: go test
 - **Python**: pytest
-- **React**: vitest
+- **React**: bun test
 **Target Platform**: Kubernetes / Cloud Native
 **Project Type**: Polyglot Microservices System (Go + Python)
 **Performance Goals**: < 100ms P95 tick-to-UI latency; sub-3s for complex AI reports.

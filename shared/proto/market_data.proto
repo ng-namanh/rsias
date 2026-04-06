@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package market_data;
+
+option go_package = "github.com/ng-namanh/rsias/backend/internal/grpc/proto";
+
+// Service for risk assessment
+service RiskService {
+  rpc GetRiskReport(RiskRequest) returns (RiskResponse);
+}
+
+// Request for a risk report
+message RiskRequest {
+  string ticker = 1;
+}
+
+// Response containing the risk report
+message RiskResponse {
+  string ticker = 1;
+  string report_content = 2;
+  float risk_score = 3;
+  repeated string citations = 4;
+}
+
+// Message for market data (Ticks)
+message MarketTick {
+  string ticker = 1;
+  double price = 2;
+  int64 timestamp = 3;
+}
+
+// Message for News
+message NewsItem {
+  string id = 1;
+  string ticker = 2;
+  string headline = 3;
+  string content = 4;
+  int64 timestamp = 5;
+}
+
+// Message for Sentiment Analysis
+message SentimentReport {
+  string news_id = 1;
+  string ticker = 2;
+  float sentiment_score = 3; // -1.0 to 1.0
+  string rationale = 4;
+}

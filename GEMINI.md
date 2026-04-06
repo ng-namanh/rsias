@@ -56,8 +56,8 @@ shared/
 - `cd ai-worker && pytest`: Run AI service tests.
 
 ### Frontend (React)
-- `cd frontend && npm run dev`: Start the development server.
-- `cd frontend && npm run test`: Run frontend tests.
+- `cd frontend && bun dev`: Start the development server.
+- `cd frontend && bun test`: Run frontend tests.
 
 ## Code Style
 

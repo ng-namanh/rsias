@@ -50,13 +50,13 @@
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Implement Go WebSocket client for market data ingestion (Polygon/Finnhub) in backend/internal/services/market_stream.go
-- [ ] T013 [P] [US1] Implement News ingestion service to pull global headlines in backend/internal/services/news_service.go
-- [ ] T014 [US1] Implement Go WebSocket Manager (BFF) to broadcast ticks to connected clients in backend/cmd/bff/main.go
-- [ ] T015 [P] [US1] Create React StockDashboard component with real-time price cards in frontend/src/components/StockDashboard.tsx
-- [ ] T016 [P] [US1] Create React NewsFeed component for live headline streaming in frontend/src/components/NewsFeed.tsx
-- [ ] T017 [US1] Implement WebSocket hook to connect frontend to Go BFF in frontend/src/hooks/useMarketStream.ts
-- [ ] T018 [US1] Add persistent storage for market ticks using TimescaleDB Hypertables in backend/internal/models/ticker_model.go
+- [X] T012 [P] [US1] Implement Go WebSocket client for market data ingestion (Polygon/Finnhub) in backend/internal/services/market_stream.go
+- [X] T013 [P] [US1] Implement News ingestion service to pull global headlines in backend/internal/services/news_service.go
+- [X] T014 [US1] Implement Go WebSocket Manager (BFF) to broadcast ticks to connected clients in backend/cmd/bff/main.go
+- [X] T015 [P] [US1] Create React StockDashboard component with real-time price cards in frontend/src/components/StockDashboard.tsx
+- [X] T016 [P] [US1] Create React NewsFeed component for live headline streaming in frontend/src/components/NewsFeed.tsx
+- [X] T017 [US1] Implement WebSocket hook to connect frontend to Go BFF in frontend/src/hooks/useMarketStream.ts
+- [X] T018 [US1] Add persistent storage for market ticks using TimescaleDB Hypertables in backend/internal/models/ticker_model.go
 
 **Checkpoint**: User Story 1 (MVP) is fully functional. Users can see live prices and news.
 

@@ -1,0 +1,17 @@
+{
+  "name": "rsias-monorepo",
+  "version": "1.0.0",
+  "description": "RSIAS Monorepo Orchestrator",
+  "scripts": {
+    "infra": "docker-compose up -d",
+    "infra:stop": "docker-compose down",
+    "backend": "cd backend && go run cmd/bff/main.go",
+    "ai": "cd ai-worker && uv run main.py",
+    "frontend": "cd frontend && bun dev",
+    "dev": "bun run infra && bun x concurrently --kill-others -n \"BACKEND,AI,FRONTEND\" -c \"cyan,green,blue\" \"bun run backend\" \"bun run ai\" \"bun run frontend\"",
+    "test:all": "bun x concurrently \"cd backend && go test ./...\" \"cd ai-worker && pytest\" \"cd frontend && bun test\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

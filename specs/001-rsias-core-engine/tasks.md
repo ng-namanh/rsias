@@ -37,26 +37,29 @@
 - [X] T009 [P] Implement Python Kafka consumer base in ai-worker/src/shared/kafka_consumer.py
 - [X] T010 [P] Implement Go gRPC server for internal service communication in backend/internal/grpc/server.go
 - [X] T011 [P] Implement Redis client for caching price snapshots in backend/internal/services/redis_client.go
-
-**Checkpoint**: Foundation ready - infrastructure services are live and internal communication is possible.
+- [X] T004 Initialize React Vite project with TypeScript in frontend/
+- [ ] T032 [P] Initialize Biome for frontend linting/formatting in frontend/biome.json
+- [ ] T033 [P] Configure Tailwind CSS and shadcn/ui with Orange primary theme in frontend/
+- [X] T005 [P] Define shared gRPC Protobuf contracts in shared/proto/market_data.proto
 
 ---
 
-## Phase 3: User Story 1 - Real-time Price & News Monitoring (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - World Monitor Dashboard (Priority: P1) 🎯 MVP
 
-**Goal**: Ingest and display live stock prices and global news headlines on a real-time dashboard.
+**Goal**: Ingest and display global financial data and news headlines on a real-time heatmap dashboard.
 
-**Independent Test**: Connect to a simulated or real market data provider and verify the frontend dashboard updates prices and news feed without refreshing.
+**Independent Test**: Connect to market data and verify the heatmap and news feed update in real-time.
 
 ### Implementation for User Story 1
 
 - [X] T012 [P] [US1] Implement Go WebSocket client for market data ingestion (Polygon/Finnhub) in backend/internal/services/market_stream.go
 - [X] T013 [P] [US1] Implement News ingestion service to pull global headlines in backend/internal/services/news_service.go
 - [X] T014 [US1] Implement Go WebSocket Manager (BFF) to broadcast ticks to connected clients in backend/cmd/bff/main.go
-- [X] T015 [P] [US1] Create React StockDashboard component with real-time price cards in frontend/src/components/StockDashboard.tsx
-- [X] T016 [P] [US1] Create React NewsFeed component for live headline streaming in frontend/src/components/NewsFeed.tsx
+- [X] T015 [P] [US1] Create React GlobalHeatmap component with SVG world map in frontend/src/components/GlobalHeatmap.tsx
+- [X] T016 [P] [US1] Create React NewsBroadcast component with country filtering in frontend/src/components/NewsBroadcast.tsx
 - [X] T017 [US1] Implement WebSocket hook to connect frontend to Go BFF in frontend/src/hooks/useMarketStream.ts
 - [X] T018 [US1] Add persistent storage for market ticks using TimescaleDB Hypertables in backend/internal/models/ticker_model.go
+
 
 **Checkpoint**: User Story 1 (MVP) is fully functional. Users can see live prices and news.
 
@@ -105,6 +108,28 @@
 - [ ] T029 [P] Implement Prometheus metrics for monitoring tick-to-UI latency in backend/internal/middleware/metrics.go
 - [ ] T030 [P] Conduct performance audit on TimescaleDB compression settings in backend/migrations/optimize_storage.sql
 - [ ] T031 [P] Finalize API documentation and run quickstart.md validation
+
+---
+
+## Phase 7: Advanced News Intelligence & Verification (Priority: P3)
+
+**Goal**: Enhance market analysis with political bias detection and automated fact-checking.
+
+- [ ] T034 [P] Implement Political Bias Classifier using Zero-Shot NLP in ai-worker/src/ensemble/bias_analyzer.py
+- [ ] T035 [P] Build AI Fact-Checking Engine (Cross-referencing via RAG) in ai-worker/src/rag/fact_verifier.py
+- [ ] T036 Update NewsBroadcast UI to display Bias Badges and Trust Scores in frontend/src/components/NewsBroadcast.tsx
+- [ ] T037 Implement "Source Reliability" dashboard view in frontend/components/SourceTrust.tsx
+
+---
+
+## Phase 8: Fundamental Business Intelligence (Priority: P3)
+
+**Goal**: Apply Token Terminal's "business-first" valuation logic to real stocks and tokens.
+
+- [ ] T038 Implement Stock Fundamentals Ingester (Revenue, EPS, P/E) in backend/internal/services/fundamental_ingester.go
+- [ ] T039 Build Sector Analytics Engine (Benchmarking logic) in ai-worker/src/shared/sector_engine.py
+- [ ] T040 Create "Business Vitality" Leaderboard component in frontend/src/components/VitalityLeaderboard.tsx
+- [ ] T041 Implement "Corporate Health" Radar chart using Recharts in frontend/src/components/HealthRadar.tsx
 
 ---
 

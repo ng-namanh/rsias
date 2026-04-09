@@ -27,28 +27,19 @@ The system is built with a decoupled, event-driven architecture:
 - Python 3.13+ & [uv](https://github.com/astral-sh/uv)
 - [Bun](https://bun.sh/)
 
-### 1. Start Infrastructure
+### 1. Start All Services (One Command)
+Make sure Docker is running, then:
 ```bash
-docker-compose up -d
-```
-
-### 2. Run Backend (Go)
-```bash
-cd backend
-go run cmd/bff/main.go
-```
-
-### 3. Run AI Worker (Python)
-```bash
-cd ai-worker
-uv run main.py
-```
-
-### 4. Run Frontend (Bun)
-```bash
-cd frontend
 bun dev
 ```
+This will start infrastructure (Docker), the Go backend, the Python AI worker, and the React frontend in parallel.
+
+### 2. Manual/Individual Start
+If you prefer running them individually:
+- **Infra**: \`docker-compose up -d\`
+- **Go Backend**: \`bun run backend\`
+- **AI Worker**: \`bun run ai\`
+- **Frontend**: \`bun run frontend\`
 
 ## 📂 Project Structure
 - `backend/`: Core Go logic, gRPC servers, and Kafka producers.

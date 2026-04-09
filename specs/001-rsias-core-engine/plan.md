@@ -11,7 +11,10 @@ Implement a high-performance, two-language microservices system for real-time st
 **Language/Version**: 
 - **Golang**: 1.21+ (API Gateway, BFF, WebSockets, Core Logic)
 - **Python**: 3.11+ (AI/NLP/RAG Pipelines)
-- **React**: (Vite) Frontend (Bun)
+- **React**: (Vite) Frontend (Bun) + **shadcn/ui** + **Tailwind CSS**
+- **Linting/Formatting**: **Biome** (Frontend)
+- **Typography**: JetBrains Mono, Monaspace
+- **Primary Color**: Orange
 **Primary Dependencies**: 
 - **Messaging**: Apache Kafka (Durable event streaming)
 - **Communication**: gRPC (Protobuf), WebSockets (Go-native)
@@ -24,6 +27,21 @@ Implement a high-performance, two-language microservices system for real-time st
 - **Go**: go test
 - **Python**: pytest
 - **React**: bun test
+
+## Feature Set (World Monitor Reference)
+- **Global Heatmap**: Interactive world map visualizing financial sentiment and economic impact.
+- **News Broadcast**: Real-time news feed filterable by country and asset class (Crypto, Gold, Indices).
+- **AI Insights**: Contextual regional analysis per economic zone.
+- **Economic Indicators**: Tracking global indices, currencies, and precious metals.
+- **News Intelligence & Trust Scoring**: 
+    - **Political Bias Classification**: Categorizing sources/articles (Far-Left to Far-Right, Extremism detection, Neutrality).
+    - **AI Fact Verification**: Real-time cross-referencing to detect fake news or misinformation.
+    - **Source Reliability Index**: Historical tracking of source accuracy.
+- **Fundamental Business Intelligence (Inspired by Token Terminal)**:
+    - **Live Financial Ratios**: Real-time tracking of P/E, P/S, and EPS for stocks (and P/F for tokens).
+    - **Sector Benchmarking**: Comparing performance metrics (Revenue, Daily Users) across industry peers.
+    - **Corporate Vitality**: Tracking patent filings, hiring trends, and R&D spend as health indicators.
+    - **Unified Health Score**: AI-generated score combining fundamentals, sentiment, and technicals.
 **Target Platform**: Kubernetes / Cloud Native
 **Project Type**: Polyglot Microservices System (Go + Python)
 **Performance Goals**: < 100ms P95 tick-to-UI latency; sub-3s for complex AI reports.

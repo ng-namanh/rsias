@@ -1,6 +1,6 @@
 # RSIAS Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-07
+Auto-generated from all feature plans. Last updated: 2026-04-10
 
 ## Active Technologies
 
@@ -67,6 +67,7 @@ shared/
 - **Protobuf**: Use `buf` for linting and generating code.
 
 ## Recent Changes
+- 001-rsias-core-engine: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
 - **001-rsias-core-engine**: Initial architecture defined. Removed Node.js, consolidated real-time logic into Golang.
 

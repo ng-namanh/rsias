@@ -1,59 +1,74 @@
-# Data Model: RSIAS Core Engine
+# Data Model: RSIAS Core Engine (MVP: Intelligence First)
 
-## PostgreSQL Entities
+**Milestone**: 1 (MVP)  
+**Type**: Relational (PostgreSQL 15+)  
 
-### StockTicker (TimescaleDB Hypertable)
-Represents the core market data for a security.
-- **id**: UUID (Primary Key)
-- **symbol**: TEXT (Indexed, e.g., 'AAPL')
-- **exchange**: TEXT
-- **price**: NUMERIC (Precision for currency)
-- **volume**: BIGINT
-- **timestamp**: TIMESTAMPTZ (Partitioning Key)
-- **industry**: TEXT
-- **Relationships**: Parent of `SentimentReport` (1:N by symbol/timestamp window).
+## Relational Schema (PostgreSQL)
 
-### NewsArticle (PostgreSQL + pgvector)
-Represents a financial news item with its semantic representation.
-- **id**: UUID (Primary Key)
-- **title**: TEXT
-- **content**: TEXT
-- **source**: TEXT (e.g., 'FactSet', 'NewsAPI')
-- **published_at**: TIMESTAMPTZ
-- **embedding**: VECTOR(1536) (pgvector for RAG, 1536 dimensions for OpenAI or similar LLM)
-- **metadata**: JSONB (Stores related ticker symbols, tags)
-- **Relationships**: Linked to `SentimentReport` (1:1 per article/stock pair).
+### 1. `companies`
+Stores core identity and fundamental health of tracked companies.
+```sql
+CREATE TABLE companies (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    symbol VARCHAR(10) UNIQUE NOT NULL, -- e.g., 'AAPL', 'NVDA'
+    name VARCHAR(255) NOT NULL,
+    sector VARCHAR(100),
+    industry VARCHAR(100),
+    market_cap BIGINT, -- In USD
+    pe_ratio DECIMAL(10, 2),
+    revenue_growth DECIMAL(5, 2), -- Percentage
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_companies_symbol ON companies(symbol);
+```
 
-### SentimentReport (PostgreSQL)
-Represents the consolidated AI assessment.
-- **id**: UUID (Primary Key)
-- **article_id**: UUID (Foreign Key -> NewsArticle)
-- **ticker_symbol**: TEXT
-- **score**: DECIMAL (Range -1.0 to 1.0)
-- **label**: TEXT (BULLISH, BEARISH, NEUTRAL)
-- **rationale**: TEXT
-- **ensemble_weights**: JSONB (Weights used for DeBERTa/RoBERTa/FinBERT)
-- **confidence**: DECIMAL
-- **created_at**: TIMESTAMPTZ
+### 2. `news_categories`
+Classification buckets for the News Heatmap.
+```sql
+CREATE TABLE news_categories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(50) UNIQUE NOT NULL, -- 'Macro', 'Geopolitical', 'Sector-Specific', etc.
+    description TEXT
+);
+-- Initial Seed: Macro, Geopolitical, Sector-Specific, Earnings/Corporate, Legal/Regulatory, Innovation/Tech
+```
 
-### MacroEvent (PostgreSQL + pgvector)
-Represents a high-level policy or geopolitical event.
-- **id**: UUID (Primary Key)
-- **event_type**: TEXT (POLICY, GEOPOLITICAL, MONETARY)
-- **region**: TEXT
-- **description**: TEXT
-- **embedding**: VECTOR(1536) (pgvector for semantic search)
-- **impact_level**: TEXT (LOW, MEDIUM, HIGH)
-- **affected_sectors**: TEXT[] (Array of industry sectors)
-- **occurred_at**: TIMESTAMPTZ
+### 3. `news_articles`
+Raw ingested news articles.
+```sql
+CREATE TABLE news_articles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    company_id UUID REFERENCES companies(id),
+    category_id UUID REFERENCES news_categories(id),
+    source_name VARCHAR(100) NOT NULL, -- 'Reuters', 'Bloomberg', 'NewsAPI'
+    headline TEXT NOT NULL,
+    content_summary TEXT,
+    url TEXT UNIQUE NOT NULL,
+    published_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_news_articles_published ON news_articles(published_at DESC);
+```
 
-## Redis (In-Memory Structures)
-- **ticker:price:{symbol}**: Latest price snapshot (TTL: 5 minutes)
-- **ai:task:{task_id}**: Result backend for long-running ensemble analysis.
-- **session:{user_id}**: Active user session data.
+### 4. `news_intelligence`
+AI-generated analysis for each article.
+```sql
+CREATE TABLE news_intelligence (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    news_article_id UUID UNIQUE REFERENCES news_articles(id),
+    sentiment_score DECIMAL(3, 2) NOT NULL, -- Range: -1.0 (Bearish) to 1.0 (Bullish)
+    trust_score DECIMAL(5, 2) NOT NULL,     -- Range: 0.0 to 100.0
+    rationale JSONB,                        -- Detailed breakdown: source_reputation, consistency, factual_grounding
+    confidence_level DECIMAL(3, 2),          -- Range: 0.0 to 1.0
+    model_version VARCHAR(50),               -- 'gpt-4o-mini'
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-## Kafka Topics
-- **market.ticks**: Raw tick-level price data.
-- **news.ingested**: Raw news articles ready for NLP.
-- **analysis.sentiment**: Generated sentiment reports for real-time push.
-- **macro.updates**: Policy/macro event updates for RAG ingestion.
+---
+
+## Validation Rules
+- **Company Symbols**: Must be 1-10 uppercase alphanumeric characters.
+- **Sentiment Scores**: Clipped to [-1.0, 1.0].
+- **Trust Scores**: Clipped to [0.0, 100.0].
+- **Published At**: Cannot be in the future.

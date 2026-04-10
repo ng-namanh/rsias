@@ -1,202 +1,91 @@
-# Tasks: RSIAS Core Engine
+# Tasks: RSIAS Core Engine (MVP: Intelligence First)
 
-**Input**: Design documents from `/specs/001-rsias-core-engine/`
-**Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/
-
-**Tests**: Tests are not explicitly requested as TDD in the spec, so implementation-integrated unit/integration tests are assumed as part of the tasks.
-
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
-
-## Format: `[ID] [P?] [Story] Description`
-
-- **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: Which user story this task belongs to (US1, US2, US3)
-- Include exact file paths in descriptions
-
-## Phase 1: Setup (Shared Infrastructure)
-
-**Purpose**: Project initialization and cross-language structure
-
-- [X] T001 Create project structure (backend/, ai-worker/, frontend/, shared/proto/) per implementation plan
-- [X] T002 Initialize Go module and basic dependencies in backend/go.mod
-- [X] T003 Initialize Python environment and dependencies using `uv` in ai-worker/pyproject.toml
-- [X] T004 Initialize React Vite project with TypeScript in frontend/
-- [X] T005 [P] Define shared gRPC Protobuf contracts in shared/proto/market_data.proto
+**Feature**: RSIAS Core Engine  
+**Milestone**: 1 (MVP)  
+**Status**: Generated  
 
 ---
 
-## Phase 2: Foundational (Blocking Prerequisites)
+## Phase 1: Setup
 
-**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
-
-**⚠️ CRITICAL**: No user story work can begin until this phase is complete
-
-- [X] T006 Configure Docker Compose for Kafka, PostgreSQL (with TimescaleDB/pgvector), and Redis in docker-compose.yml
-- [X] T007 Implement database migrations for Hypertables (ticks) and Vector columns (embeddings) in backend/migrations/
-- [X] T008 [P] Implement Go Kafka producer utility in backend/internal/services/kafka_producer.go
-- [X] T009 [P] Implement Python Kafka consumer base in ai-worker/src/shared/kafka_consumer.py
-- [X] T010 [P] Implement Go gRPC server for internal service communication in backend/internal/grpc/server.go
-- [X] T011 [P] Implement Redis client for caching price snapshots in backend/internal/services/redis_client.go
-- [X] T004 Initialize React Vite project with TypeScript in frontend/
-- [ ] T032 [P] Initialize Biome for frontend linting/formatting in frontend/biome.json
-- [ ] T033 [P] Configure Tailwind CSS and shadcn/ui with Orange primary theme in frontend/
-- [X] T005 [P] Define shared gRPC Protobuf contracts in shared/proto/market_data.proto
+- [x] T001 Initialize backend project structure for producers and BFF in `backend/`
+- [x] T002 Initialize AI-worker environment and dependencies in `ai-worker/pyproject.toml`
+- [x] T003 Configure Kafka topics `news.raw`, `news.enriched`, and `news.fundamentals` in `docker-compose.yml`
+- [x] T004 Setup database migration tool using `jackc/pgx/v5` in `backend/cmd/migrate/main.go`
 
 ---
 
-## Phase 3: User Story 1 - World Monitor Dashboard (Priority: P1) 🎯 MVP
+## Phase 2: Foundational (Blocking)
 
-**Goal**: Ingest and display global financial data and news headlines on a real-time heatmap dashboard.
-
-**Independent Test**: Connect to market data and verify the heatmap and news feed update in real-time.
-
-### Implementation for User Story 1
-
-- [X] T012 [P] [US1] Implement Go WebSocket client for market data ingestion (Polygon/Finnhub) in backend/internal/services/market_stream.go
-- [X] T013 [P] [US1] Implement News ingestion service to pull global headlines in backend/internal/services/news_service.go
-- [X] T014 [US1] Implement Go WebSocket Manager (BFF) to broadcast ticks to connected clients in backend/cmd/bff/main.go
-- [X] T015 [P] [US1] Create React GlobalHeatmap component with SVG world map in frontend/src/components/GlobalHeatmap.tsx
-- [X] T016 [P] [US1] Create React NewsBroadcast component with country filtering in frontend/src/components/NewsBroadcast.tsx
-- [X] T017 [US1] Implement WebSocket hook to connect frontend to Go BFF in frontend/src/hooks/useMarketStream.ts
-- [X] T018 [US1] Add persistent storage for market ticks using TimescaleDB Hypertables in backend/internal/models/ticker_model.go
-
-
-**Checkpoint**: User Story 1 (MVP) is fully functional. Users can see live prices and news.
+- [x] T005 [P] Implement PostgreSQL schema for `companies`, `news_categories`, `news_articles`, and `news_intelligence` in `backend/migrations/002_relational_schema.sql`
+- [x] T006 [P] Seed initial news categories (Macro, Geopolitical, Tech, etc.) in `backend/migrations/003_seed_categories.sql`
+- [x] T007 [P] Create shared Go models for relational entities in `backend/internal/models/`
+- [x] T008 [P] Create shared Python Pydantic models for news and intelligence in `ai-worker/src/shared/models.py`
 
 ---
 
-## Phase 4: User Story 2 - AI-Driven Sentiment & Impact Analysis (Priority: P1)
+## Phase 3: User Story 1 - News Intelligence & Trust Scoring [US1]
 
-**Goal**: Analyze ingested news using an ensemble of LLMs to provide sentiment scores and impact rationales.
+**Goal**: Deliver real-time news with AI-generated trust and sentiment scores.  
+**Test Criteria**: Ingested news flows to `news.raw` -> `AI Worker` -> `news.enriched` -> `Dashboard` with Trust Score visible.
 
-**Independent Test**: Ingest a sample news article and verify that a `SentimentReport` is generated and displayed on the dashboard for the relevant ticker.
-
-### Implementation for User Story 2
-
-- [ ] T019 [P] [US2] Implement Hybrid NER for ticker/entity mapping in ai-worker/src/ner/entity_extractor.py
-- [ ] T020 [P] [US2] Implement Ensemble Sentiment Analyzer (DeBERTa/RoBERTa/FinBERT weights) in ai-worker/src/ensemble/sentiment_analyzer.py
-- [ ] T021 [US2] Implement Python AI Worker to consume `news.ingested` and publish `analysis.sentiment` to Kafka in ai-worker/src/main.py
-- [ ] T022 [US2] Implement Go consumer to store sentiment reports in PostgreSQL in backend/internal/services/sentiment_handler.go
-- [ ] T023 [US2] Update React Dashboard to display sentiment indicators (Bullish/Bearish) on price cards in frontend/src/components/SentimentBadge.tsx
-
-**Checkpoint**: AI Analysis is live. Raw news is automatically converted into sentiment signals on the dashboard.
+- [x] T009 [P] [US1] Implement `news_producer` in Go to fetch news via Alpha Vantage/NewsAPI in `backend/cmd/producer/news_producer.go`
+- [x] T010 [US1] Implement staggered polling logic for news in `backend/internal/services/polling_service.go`
+- [x] T011 [P] [US1] Implement `intelligence_worker` in Python to consume `news.raw` in `ai-worker/src/intelligence_worker.py`
+- [x] T012 [US1] Integrate OpenAI API for news categorization and trust scoring in `ai-worker/src/services/ai_service.py`
+- [x] T013 [P] [US1] Implement persistence worker in Go to sink `news.enriched` to PostgreSQL in `backend/internal/services/news_persistence.go`
+- [x] T014 [US1] Update BFF to broadcast `news.enriched` messages via WebSockets in `backend/cmd/bff/main.go`
+- [x] T015 [P] [US1] Create Enriched News Feed component in React in `frontend/src/components/NewsFeed.tsx`
+- [x] T016 [US1] Implement WebSocket hook for real-time news updates in `frontend/src/hooks/useNewsStream.ts`
 
 ---
 
-## Phase 5: User Story 3 - Macroeconomic & Geopolitical Risk Evaluation (Priority: P2)
+## Phase 4: User Story 2 - Fundamental Business Intelligence [US2]
 
-**Goal**: Use RAG to evaluate how national policies and geopolitical events affect specific stocks/sectors.
+**Goal**: Provide financial context for companies mentioned in the news.  
+**Test Criteria**: Selecting a ticker in the news feed displays its current P/E, Market Cap, and Revenue Growth in the sidebar.
 
-**Independent Test**: Query a stock and receive a "Risk Report" that cites specific retrieved policy documents or macro events.
+- [ ] T017 [P] [US2] Implement `fundamentals_producer` in Go to fetch company metrics daily in `backend/cmd/producer/fundamentals_producer.go`
+- [ ] T018 [P] [US2] Implement REST endpoint `GET /api/v1/companies/:symbol/fundamentals` in `backend/cmd/bff/main.go`
+- [ ] T019 [P] [US2] Create Fundamentals Sidebar component in React in `frontend/src/components/FundamentalsSidebar.tsx`
+- [ ] T020 [US2] Implement data fetching hook for company fundamentals in `frontend/src/hooks/useFundamentals.ts`
 
-### Implementation for User Story 3
+---
 
-- [ ] T024 [P] [US3] Implement RAG pipeline using LangChain and pgvector for semantic search in ai-worker/src/rag/risk_assessor.py
-- [ ] T025 [US3] Implement Macro data ingestion worker to populate vector store in ai-worker/src/shared/macro_ingester.py
-- [ ] T026 [US3] Implement gRPC endpoint in Go to request risk reports from Python in backend/internal/grpc/risk_service.go
-- [ ] T027 [US3] Add "Policy Risk Report" modal/view to the frontend in frontend/src/components/RiskReport.tsx
+## Phase 5: User Story 3 - Global News Category Heatmap [US3]
 
-**Checkpoint**: Deep analysis is available. Users can now see the "Why" behind market movements through a macro lens.
+**Goal**: Visualize the intensity and sentiment of news across categories.  
+**Test Criteria**: Heatmap updates colors/intensity as new articles are categorized by the AI worker.
+
+- [ ] T021 [US3] Implement heatmap data aggregator service in Go in `backend/internal/services/heatmap_service.go`
+- [ ] T022 [US3] Add `heatmap.update` broadcast to BFF WebSocket in `backend/cmd/bff/main.go`
+- [ ] T023 [P] [US3] Create Category Heatmap visualization component in React in `frontend/src/components/Heatmap.tsx`
+- [ ] T024 [US3] Implement category filtering logic in the News Feed based on heatmap interaction in `frontend/src/store/intelligenceStore.ts`
 
 ---
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-**Purpose**: Hardening, monitoring, and documentation.
-
-- [ ] T028 [P] Implement JWT authentication in API Gateway for secure WebSocket access in backend/cmd/gateway/main.go
-- [ ] T029 [P] Implement Prometheus metrics for monitoring tick-to-UI latency in backend/internal/middleware/metrics.go
-- [ ] T030 [P] Conduct performance audit on TimescaleDB compression settings in backend/migrations/optimize_storage.sql
-- [ ] T031 [P] Finalize API documentation and run quickstart.md validation
-
----
-
-## Phase 7: Advanced News Intelligence & Verification (Priority: P3)
-
-**Goal**: Enhance market analysis with political bias detection and automated fact-checking.
-
-- [ ] T034 [P] Implement Political Bias Classifier using Zero-Shot NLP in ai-worker/src/ensemble/bias_analyzer.py
-- [ ] T035 [P] Build AI Fact-Checking Engine (Cross-referencing via RAG) in ai-worker/src/rag/fact_verifier.py
-- [ ] T036 Update NewsBroadcast UI to display Bias Badges and Trust Scores in frontend/src/components/NewsBroadcast.tsx
-- [ ] T037 Implement "Source Reliability" dashboard view in frontend/components/SourceTrust.tsx
-
----
-
-## Phase 8: Fundamental Business Intelligence (Priority: P3)
-
-**Goal**: Apply Token Terminal's "business-first" valuation logic to real stocks and tokens.
-
-- [ ] T038 Implement Stock Fundamentals Ingester (Revenue, EPS, P/E) in backend/internal/services/fundamental_ingester.go
-- [ ] T039 Build Sector Analytics Engine (Benchmarking logic) in ai-worker/src/shared/sector_engine.py
-- [ ] T040 Create "Business Vitality" Leaderboard component in frontend/src/components/VitalityLeaderboard.tsx
-- [ ] T041 Implement "Corporate Health" Radar chart using Recharts in frontend/src/components/HealthRadar.tsx
-
----
-
-## Dependencies & Execution Order
-
-### Phase Dependencies
-
-- **Setup (Phase 1)**: No dependencies - Start immediately.
-- **Foundational (Phase 2)**: Depends on Phase 1 - Blocks all User Stories.
-- **User Stories (Phase 3+)**: All depend on Phase 2 completion.
-  - US1 (P1) and US2 (P1) can proceed in parallel once the foundation is ready.
-  - US3 (P2) depends on US2 components for news context but can start parallel research.
-- **Polish (Final Phase)**: Depends on US1 and US2 completion.
-
-### User Story Dependencies
-
-- **User Story 1 (P1)**: The MVP base. No dependencies on other stories.
-- **User Story 2 (P1)**: Depends on US1 for raw news ingestion.
-- **User Story 3 (P2)**: Depends on the vector store initialized in Phase 2.
-
-### Parallel Opportunities
-
-- Phase 1 and Phase 2 tasks marked [P] are strictly independent.
-- Once Phase 2 is done, the **Go Backend (US1)** and **Python AI Worker (US2)** can be developed in parallel by different developers.
-- Frontend components in US1 (T015, T016) can be built in parallel with backend services (T012, T013).
-
----
-
-## Parallel Example: User Story 1 & 2 (Team Mode)
-
-```bash
-# Developer A (Go):
-Task: "Implement Go WebSocket client... in backend/internal/services/market_stream.go"
-Task: "Implement News ingestion service... in backend/internal/services/news_service.go"
-
-# Developer B (Python):
-Task: "Implement Hybrid NER... in ai-worker/src/ner/entity_extractor.py"
-Task: "Implement Ensemble Sentiment Analyzer... in ai-worker/src/ensemble/sentiment_analyzer.py"
-
-# Developer C (Frontend):
-Task: "Create React StockDashboard... in frontend/src/components/StockDashboard.tsx"
-Task: "Create React NewsFeed... in frontend/src/components/NewsFeed.tsx"
-```
+- [ ] T025 Implement robust error handling and retries for external API calls in `backend/internal/pkg/httpclient/`
+- [ ] T026 Add rate limit monitoring and logging for AI and Market Data APIs
+- [ ] T027 Final UI/UX polish, ensuring responsiveness and consistent styling with Tailwind CSS
+- [ ] T028 Update `README.md` with final MVP documentation and demo instructions
 
 ---
 
 ## Implementation Strategy
 
-### MVP First (User Story 1 Only)
+1. **MVP First**: Focus exclusively on US1 to establish the end-to-end real-time pipeline.
+2. **Incremental Delivery**: US2 and US3 can be developed in parallel once US1 is functional.
+3. **Fail-Fast**: Validate AI scoring accuracy early in Phase 3 before building the full frontend.
 
-1. Complete Setup (Phase 1).
-2. Complete Foundation (Phase 2).
-3. Complete US1 (Phase 3).
-4. **STOP and VALIDATE**: Verify live price and news delivery to the UI.
+## Dependencies
 
-### Incremental Delivery
+- **US1** depends on **Foundational Phase** (Schema & Models).
+- **US2** depends on **Foundational Phase** (Schema).
+- **US3** depends on **US1** (Categorized News Data).
 
-1. Foundation ready (Phase 1 & 2).
-2. Real-time Dashboard (US1).
-3. AI Sentiment Signals (US2).
-4. Macro Risk Reports (US3).
-5. Final Hardening & Polish.
+## Parallel Execution Examples
 
----
-
-## Notes
-
-- All tasks include specific file paths for LLM execution readiness.
-- [P] tags identify where horizontal scaling of the development team is possible.
-- Each user story phase ends with a clear Checkpoint for independent validation.
+- **Data Flow**: T009 (News Producer) and T011 (AI Worker) can be implemented simultaneously.
+- **Frontend/Backend**: T015 (News Feed UI) and T014 (BFF WebSocket) can be developed in parallel using the `frontend_ws.json` contract.

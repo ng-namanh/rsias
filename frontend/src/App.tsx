@@ -1,11 +1,14 @@
 import React from 'react';
 import { useMarketStream } from './hooks/useMarketStream';
+import { useNewsStream } from './hooks/useNewsStream';
 import GlobalHeatmap from './components/GlobalHeatmap';
-import NewsBroadcast from './components/NewsBroadcast';
+import NewsFeed from './components/NewsFeed';
 import { Activity, ShieldCheck, Zap, Globe2 } from 'lucide-react';
 
 function App() {
-  const { ticks, news, isConnected } = useMarketStream('ws://localhost:8081/ws');
+  const { ticks, isConnected: isMarketConnected } = useMarketStream('ws://localhost:8081/ws');
+  const { news, isConnected: isNewsConnected } = useNewsStream('ws://localhost:8081/ws');
+  const isConnected = isMarketConnected || isNewsConnected;
 
   return (
     <div className="min-h-screen bg-[#050505] text-zinc-100 font-mono selection:bg-orange-500/30">
@@ -75,7 +78,7 @@ function App() {
 
         {/* Right Column: News Ticker */}
         <div className="col-span-12 lg:col-span-4 h-[calc(100vh-120px)]">
-          <NewsBroadcast news={news} />
+          <NewsFeed news={news} />
         </div>
       </main>
 

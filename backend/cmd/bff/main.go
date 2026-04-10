@@ -23,7 +23,7 @@ var (
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Printf("Error upgrading to WebSocket: %v", err)
+	log.Printf("Error upgrading to WebSocket: %v", err)
 		return
 	}
 	defer conn.Close()
@@ -83,7 +83,8 @@ func main() {
 
 	// Start Kafka consumers for ticks and news in parallel
 	go consumeAndBroadcast(ctx, brokers, "market.ticks")
-	go consumeAndBroadcast(ctx, brokers, "news.ingested")
+	go consumeAndBroadcast(ctx, brokers, "news.enriched")
+	go consumeAndBroadcast(ctx, brokers, "news.fundamentals")
 
 	http.HandleFunc("/ws", handleWebSocket)
 

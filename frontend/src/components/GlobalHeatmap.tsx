@@ -5,7 +5,7 @@ const GlobalHeatmap: React.FC = () => {
     <div className="bg-zinc-950 border border-orange-500/20 rounded-lg p-4 h-[400px] relative overflow-hidden group">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-orange-500 font-mono text-xs font-bold tracking-widest uppercase flex items-center gap-2">
-          <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-ping" />
+          <span className="size-1.5 bg-orange-500 rounded-full animate-ping" />
           Global Sentiment Heatmap
         </h2>
         <div className="flex gap-3 text-[10px] font-mono text-zinc-500">
@@ -37,7 +37,7 @@ const GlobalHeatmap: React.FC = () => {
         </svg>
       </div>
 
-      <div className="absolute bottom-4 left-4 font-mono text-[10px] text-zinc-600 space-y-1">
+      <div className="absolute bottom-4 left-4 font-mono text-[10px] text-zinc-600 flex flex-col gap-1">
         <div>LATENCY: 12ms</div>
         <div>Uptime: 99.99%</div>
       </div>

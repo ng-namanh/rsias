@@ -1,5 +1,5 @@
 import React from 'react';
-import { Newspaper, Globe, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Newspaper, Globe, ArrowUpRight } from 'lucide-react';
 
 interface NewsItem {
   id: string;
@@ -23,8 +23,8 @@ const NewsBroadcast: React.FC<NewsBroadcastProps> = ({ news }) => {
         </h2>
         <span className="text-[10px] font-mono text-zinc-500 animate-pulse">REC // LIVE</span>
       </div>
-      
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
+
+      <div className="flex-1 overflow-y-auto">
         {news.length === 0 && (
           <div className="p-10 text-center text-zinc-700 font-mono text-xs">
             AWAITING_INBOUND_SIGNALS...

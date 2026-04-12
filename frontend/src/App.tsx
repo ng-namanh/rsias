@@ -4,6 +4,7 @@ import { useNewsStream } from './hooks/useNewsStream';
 import GlobalHeatmap from './components/GlobalHeatmap';
 import NewsFeed from './components/NewsFeed';
 import { Activity, ShieldCheck, Zap, Globe2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 function App() {
   const { ticks, isConnected: isMarketConnected } = useMarketStream('ws://localhost:8081/ws');
@@ -15,7 +16,7 @@ function App() {
       {/* Top Header */}
       <header className="h-14 border-b border-orange-500/20 bg-black/50 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-50">
         <div className="flex items-center gap-4">
-          <div className="w-8 h-8 bg-orange-500 rounded flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+          <div className="size-8 bg-orange-500 rounded flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
             <Globe2 size={20} className="text-black" />
           </div>
           <div>
@@ -30,7 +31,10 @@ function App() {
             <span className="text-[10px] text-green-500 font-bold">12MS</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+            <div className={cn(
+              'size-2 rounded-full',
+              isConnected ? 'bg-green-500 animate-pulse' : 'bg-destructive'
+            )} />
             <span className="text-[10px] text-zinc-400 uppercase tracking-widest">
               {isConnected ? 'Network_Stable' : 'Network_Offline'}
             </span>
@@ -40,9 +44,9 @@ function App() {
 
       <main className="p-6 max-w-[1600px] mx-auto grid grid-cols-12 gap-6">
         {/* Left Column: Heatmap & Metrics */}
-        <div className="col-span-12 lg:col-span-8 space-y-6">
+        <div className="col-span-12 lg:col-span-8 flex flex-col gap-6">
           <GlobalHeatmap />
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Asset Cards */}
             {['BTC/USD', 'XAU/USD', 'SPX_500'].map((asset) => (
@@ -54,7 +58,9 @@ function App() {
                 <div className="text-2xl font-bold tracking-tighter">
                   {ticks.find(t => t.ticker === asset.split('/')[0])?.price.toFixed(2) || '---.--'}
                 </div>
-                <div className="text-[10px] text-green-500 mt-1 font-bold">+0.42% <span className="text-zinc-600 font-normal ml-1">24H</span></div>
+                <div className="text-[10px] text-green-500 mt-1 font-bold">
+                  +0.42% <span className="text-zinc-600 font-normal ml-1">24H</span>
+                </div>
               </div>
             ))}
           </div>
@@ -69,8 +75,8 @@ function App() {
               AI_Analysis_Insight
             </h3>
             <p className="text-sm text-zinc-400 leading-relaxed max-w-2xl font-mono">
-              SENTIMENT_CORE reports high correlation between EUR_ENERGY_POLICY and TSLA production forecasts. 
-              Macro-risk scores for APAC region have stabilized following recent trade agreements. 
+              SENTIMENT_CORE reports high correlation between EUR_ENERGY_POLICY and TSLA production forecasts.
+              Macro-risk scores for APAC region have stabilized following recent trade agreements.
               <span className="text-orange-500/80 underline decoration-dotted cursor-pointer ml-1">Analyze Deep Report_</span>
             </p>
           </div>
@@ -84,7 +90,9 @@ function App() {
 
       {/* Footer Info-bar */}
       <footer className="fixed bottom-0 w-full h-8 bg-black border-t border-zinc-900 px-6 flex items-center gap-6 z-50 overflow-hidden whitespace-nowrap text-[9px] font-mono text-zinc-600">
-        <span className="flex items-center gap-1"><ShieldCheck size={10} className="text-green-500" /> SYSTEM_ENCRYPTED</span>
+        <span className="flex items-center gap-1">
+          <ShieldCheck size={10} className="text-green-500" /> SYSTEM_ENCRYPTED
+        </span>
         <span className="text-zinc-800">|</span>
         <span className="animate-marquee inline-block">
           MARKET_SENTIMENT: BULLISH // CRUDE_OIL: +1.2% // S&P500: UNCH // GOLD: 2,145.40 // BTC: 64,210.55 // ETH: 3,421.10

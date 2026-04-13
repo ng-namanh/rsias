@@ -45,10 +45,10 @@
 **Goal**: Provide financial context for companies mentioned in the news.  
 **Test Criteria**: Selecting a ticker in the news feed displays its current P/E, Market Cap, and Revenue Growth in the sidebar.
 
-- [ ] T017 [P] [US2] Implement `fundamentals_producer` in Go to fetch company metrics daily in `backend/cmd/producer/fundamentals_producer.go`
-- [ ] T018 [P] [US2] Implement REST endpoint `GET /api/v1/companies/:symbol/fundamentals` in `backend/cmd/bff/main.go`
-- [ ] T019 [P] [US2] Create Fundamentals Sidebar component in React in `frontend/src/components/FundamentalsSidebar.tsx`
-- [ ] T020 [US2] Implement data fetching hook for company fundamentals in `frontend/src/hooks/useFundamentals.ts`
+- [x] T017 [P] [US2] Implement `fundamentals_producer` in Go to fetch company metrics daily in `backend/cmd/producer/fundamentals_producer.go`
+- [x] T018 [P] [US2] Implement REST endpoint `GET /api/v1/companies/:symbol/fundamentals` in `backend/cmd/bff/main.go`
+- [x] T019 [P] [US2] Create Fundamentals Sidebar component in React in `frontend/src/components/FundamentalsSidebar.tsx`
+- [x] T020 [US2] Implement data fetching hook for company fundamentals in `frontend/src/hooks/useFundamentals.ts`
 
 ---
 
@@ -57,19 +57,19 @@
 **Goal**: Visualize the intensity and sentiment of news across categories.  
 **Test Criteria**: Heatmap updates colors/intensity as new articles are categorized by the AI worker.
 
-- [ ] T021 [US3] Implement heatmap data aggregator service in Go in `backend/internal/services/heatmap_service.go`
-- [ ] T022 [US3] Add `heatmap.update` broadcast to BFF WebSocket in `backend/cmd/bff/main.go`
-- [ ] T023 [P] [US3] Create Category Heatmap visualization component in React in `frontend/src/components/Heatmap.tsx`
-- [ ] T024 [US3] Implement category filtering logic in the News Feed based on heatmap interaction in `frontend/src/store/intelligenceStore.ts`
+- [x] T021 [US3] Implement heatmap data aggregator service in Go in `backend/internal/services/heatmap_service.go`
+- [x] T022 [US3] Add `heatmap.update` broadcast to BFF WebSocket in `backend/cmd/bff/main.go`
+- [x] T023 [P] [US3] Create Category Heatmap visualization component in React in `frontend/src/components/Heatmap.tsx`
+- [x] T024 [US3] Implement category filtering logic in the News Feed based on heatmap interaction in `frontend/src/store/intelligenceStore.ts`
 
 ---
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T025 Implement robust error handling and retries for external API calls in `backend/internal/pkg/httpclient/`
-- [ ] T026 Add rate limit monitoring and logging for AI and Market Data APIs
-- [ ] T027 Final UI/UX polish, ensuring responsiveness and consistent styling with Tailwind CSS
-- [ ] T028 Update `README.md` with final MVP documentation and demo instructions
+- [x] T025 Implement robust error handling and retries for external API calls in `backend/internal/pkg/httpclient/`
+- [x] T026 Add rate limit monitoring and logging for AI and Market Data APIs
+- [x] T027 Final UI/UX polish, ensuring responsiveness and consistent styling with Tailwind CSS
+- [x] T028 Update `README.md` with final MVP documentation and demo instructions
 
 ---
 

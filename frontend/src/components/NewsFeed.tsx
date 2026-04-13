@@ -1,6 +1,9 @@
 import { cn } from '@/lib/utils';
 import { Clock, Newspaper } from 'lucide-react';
 import React from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import { Badge } from './ui/badge';
+import { Separator } from './ui/separator';
 
 interface NewsIntelligence {
   sentiment_score: number;
@@ -24,30 +27,31 @@ interface NewsFeedProps {
 
 const NewsFeed: React.FC<NewsFeedProps> = ({ news }) => {
   return (
-    <div className="bg-card rounded-lg shadow-md border overflow-hidden">
-      <div className="bg-muted border-b p-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-card-foreground flex items-center gap-2">
+    <Card className="overflow-hidden flex flex-col h-full bg-card shadow-sm p-0">
+      <CardHeader className="bg-muted border-b border-border p-4 flex flex-row items-center justify-between rounded-none">
+        <CardTitle className="text-xl font-bold tracking-tight leading-none text-foreground flex items-center gap-2">
           <Newspaper size={20} className="text-primary" />
           Intelligence News Feed
-        </h2>
-        <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full uppercase">
+        </CardTitle>
+        <Badge variant="outline" className="text-[10px] font-bold tracking-widest text-primary border-primary/20 bg-primary/5 px-2 py-0.5 rounded-full uppercase">
           Real-time
-        </span>
-      </div>
+        </Badge>
+      </CardHeader>
 
-      <div className="divide-y max-h-[600px] overflow-y-auto">
+      <CardContent className="p-0 flex-1 overflow-y-auto">
         {news.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground italic">
             Waiting for news intelligence...
           </div>
         ) : (
           news.map((item, index) => (
-            <div key={item.id || index} className="p-4 hover:bg-muted/50 transition-colors">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
-                    {item.source_name}
-                  </span>
+            <React.Fragment key={item.id || index}>
+              <div className="p-4 hover:bg-muted/50 transition-colors">
+                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs font-bold text-primary bg-primary/5 rounded-sm h-5 py-0 px-1.5">
+                      {item.source_name}
+                    </Badge>
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
                     <Clock size={12} />
                     {new Date(item.published_at).toLocaleTimeString()}
@@ -56,31 +60,35 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ news }) => {
 
                 {item.intelligence && (
                   <div className="flex gap-2">
-                    <div className={cn(
-                      'text-[10px] font-bold px-1.5 py-0.5 rounded border',
-                      item.intelligence.sentiment_score > 0
-                        ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-green-900'
-                        : item.intelligence.sentiment_score < 0
-                          ? 'bg-destructive/10 text-destructive border-destructive/20'
-                          : 'bg-muted text-muted-foreground border'
-                    )}>
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        'text-[10px] font-bold px-1.5 py-0 h-5 rounded-sm tracking-wide',
+                        item.intelligence.sentiment_score > 0
+                          ? 'bg-green-50 text-green-700 border-green-200'
+                          : item.intelligence.sentiment_score < 0
+                            ? 'bg-destructive/10 text-destructive border-destructive/20'
+                            : 'bg-muted text-muted-foreground border-border'
+                      )}>
                       SENT: {item.intelligence.sentiment_score.toFixed(1)}
-                    </div>
-                    <div className={cn(
-                      'text-[10px] font-bold px-1.5 py-0.5 rounded border',
-                      item.intelligence.trust_score > 70
-                        ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-green-900'
-                        : item.intelligence.trust_score < 40
-                          ? 'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-400 dark:border-yellow-900'
-                          : 'bg-primary/10 text-primary border-primary/20'
-                    )}>
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        'text-[10px] font-bold px-1.5 py-0 h-5 rounded-sm tracking-wide',
+                        item.intelligence.trust_score > 70
+                          ? 'bg-green-50 text-green-700 border-green-200'
+                          : item.intelligence.trust_score < 40
+                            ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                            : 'bg-primary/10 text-primary border-primary/20'
+                      )}>
                       TRUST: {item.intelligence.trust_score.toFixed(0)}
-                    </div>
+                    </Badge>
                   </div>
                 )}
               </div>
 
-              <h3 className="text-md font-semibold text-foreground leading-tight mb-1">
+              <h3 className="text-lg font-bold tracking-tight text-foreground leading-tight mb-1">
                 <a
                   href={item.url}
                   target="_blank"
@@ -101,10 +109,12 @@ const NewsFeed: React.FC<NewsFeedProps> = ({ news }) => {
                 {item.content_summary}
               </p>
             </div>
+            {index < news.length - 1 && <Separator />}
+          </React.Fragment>
           ))
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -1,8 +1,11 @@
 import os
 import logging
+from dotenv import load_dotenv
 from shared.kafka_consumer import BaseKafkaConsumer
 from shared.kafka_producer import BaseKafkaProducer
 from services.ai_service import AIService
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

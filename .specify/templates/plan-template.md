@@ -31,6 +31,13 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
+- **Polyglot Architecture**: [PASS/FAIL] - Go for BFF/WS, Python for AI.
+- **Hybrid Communication**: [PASS/FAIL] - Kafka + gRPC.
+- **Unified Data Strategy**: [PASS/FAIL] - PostgreSQL (TimescaleDB + pgvector).
+- **Real-time Precision**: [PASS/FAIL] - Go WebSockets, <50ms latency.
+- **Robust AI Pipeline**: [PASS/FAIL] - Ensemble/Hybrid models + RAG.
+- **Frontend Consistency**: [PASS/FAIL] - shadcn/ui + DESIGN.md (Saans tracking, 4px radius, warm palette).
+
 [Gates determined based on constitution file]
 
 ## Project Structure

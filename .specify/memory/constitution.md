@@ -1,16 +1,16 @@
 <!--
 Sync Impact Report:
-- Version change: 1.0.0 → 1.1.0
+- Version change: 1.1.0 → 1.2.0
 - List of modified principles:
-  - I. Polyglot Microservices Architecture: Removed Node.js. Consolidated BFF and WebSocket management into Golang.
-- Added sections: None
+  - None (Renumbered existing)
+- Added sections:
+  - VI. Frontend Excellence & Design Consistency: Incorporated shadcn/ui and Intercom-inspired Design System (DESIGN.md).
 - Removed sections: None
 - Templates requiring updates (✅ updated / ⚠ pending):
-  - .specify/templates/plan-template.md (⚠ pending)
-  - .specify/templates/spec-template.md (⚠ pending)
-  - .specify/templates/tasks-template.md (⚠ pending)
-- Follow-up TODOs:
-  - Update Implementation Plan (001-rsias-core-engine) to reflect Go + Python model.
+  - .specify/templates/plan-template.md (✅ updated)
+  - .specify/templates/spec-template.md (✅ updated)
+  - .specify/templates/tasks-template.md (✅ updated)
+- Follow-up TODOs: None
 -->
 
 # RSIAS Constitution
@@ -48,12 +48,23 @@ AI-driven insights MUST prioritize precision over simplicity:
 - **Ensemble Sentiment**: Aggregate results from multiple specialized models (DeBERTa, RoBERTa, FinBERT) to reach ~80% accuracy.
 - **RAG Architecture**: Always ground LLM outputs in real-time macroeconomic and policy data via vector search.
 
+### VI. Frontend Excellence & Design Consistency
+The User Interface MUST provide a precise, high-signal experience following these non-negotiable rules:
+- **shadcn/ui Composition**: ALL UI components MUST be built by composing shadcn/ui primitives. Use existing registry components before custom markup.
+- **Intercom-Inspired Aesthetics**: Adhere strictly to the Visual Theme in `DESIGN.md`:
+  - **Canvas**: Warm off-white (`#faf9f6`) with oat-toned borders (`#dedbd6`).
+  - **Typography**: Saans font for headings with tight 1.00 line-height and negative tracking (e.g., -2.4px at 80px).
+  - **Accents**: Fin Orange (`#ff5600`) MUST be reserved exclusively for AI features and primary brand accents.
+  - **Geometry**: Sharp 4px border-radius for buttons; 8px for cards.
+- **Semantic Styling**: Use Tailwind CSS with semantic tokens (`bg-background`, `text-primary`). No raw hex codes in component logic.
+- **Interaction**: Apply `scale(1.1)` hover and `scale(0.85)` active states for physical button feedback.
+
 ## Technology Stack & Infrastructure
 - **Languages**: Golang 1.21+, Python 3.11+, TypeScript 5+ (Frontend only).
 - **Data Store**: PostgreSQL 15+ with TimescaleDB and pgvector extensions.
-- **Messaging**: Apache Kafka (or NATS for lightweight alternative) and gRPC.
-- **UI Framework**: React with Vite and Tailwind CSS.
-- **External Integrations**: Polygon.io, Finnhub, Alpha Vantage, FactSet, Finnworlds.
+- **Messaging**: Apache Kafka and gRPC.
+- **UI Framework**: React with Vite, Tailwind CSS, and shadcn/ui.
+- **Design System**: Intercom-inspired (Saans/Serrif typography, specific warm palette).
 
 ## Development Workflow & Quality Gates
 - **SDD Compliance**: All features MUST follow the Spec-Driven Development workflow (Specify -> Plan -> Tasks -> Implement).
@@ -63,4 +74,4 @@ AI-driven insights MUST prioritize precision over simplicity:
 ## Governance
 This constitution is the supreme authority for technical decisions in RSIAS. Any deviation requires a documented justification and a formal amendment to this file. Compliance will be reviewed during every Architectural Review and PR cycle.
 
-**Version**: 1.1.0 | **Ratified**: 2026-04-07 | **Last Amended**: 2026-04-07
+**Version**: 1.2.0 | **Ratified**: 2026-04-07 | **Last Amended**: 2026-04-10

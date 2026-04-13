@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package rsias.portfolio.v1;
+
+option go_package = "github.com/rsias/backend/internal/grpc/portfolio";
+
+service PortfolioService {
+  rpc AddExchangeConnection(AddExchangeRequest) returns (ExchangeResponse);
+  rpc RemoveExchangeConnection(RemoveExchangeRequest) returns (ExchangeResponse);
+  rpc GetPortfolioSummary(GetPortfolioRequest) returns (PortfolioSummary);
+}
+
+message AddExchangeRequest {
+  string user_id = 1;
+  string exchange_name = 2;
+  string api_key = 3;
+  string api_secret = 4;
+}
+
+message RemoveExchangeRequest {
+  string user_id = 1;
+  string connection_id = 2;
+}
+
+message ExchangeResponse {
+  string connection_id = 1;
+  string status = 2;
+  string message = 3;
+}
+
+message GetPortfolioRequest {
+  string user_id = 1;
+}
+
+message PortfolioSummary {
+  double total_value_usd = 1;
+  double pnl_24h_usd = 2;
+  double pnl_24h_pct = 3;
+  repeated AssetHolding holdings = 4;
+}
+
+message AssetHolding {
+  string symbol = 1;
+  double amount = 2;
+  double current_price_usd = 3;
+  double total_value_usd = 4;
+  string exchange_name = 5;
+}

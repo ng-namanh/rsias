@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package rsias.watchlist.v1;
+
+option go_package = "github.com/rsias/backend/internal/grpc/watchlist";
+
+service WatchlistService {
+  rpc CreateWatchlist(CreateWatchlistRequest) returns (WatchlistResponse);
+  rpc DeleteWatchlist(DeleteWatchlistRequest) returns (WatchlistResponse);
+  rpc AddTicker(AddTickerRequest) returns (WatchlistResponse);
+  rpc RemoveTicker(RemoveTickerRequest) returns (WatchlistResponse);
+  rpc GetUserWatchlists(GetUserWatchlistsRequest) returns (UserWatchlistsResponse);
+}
+
+message CreateWatchlistRequest {
+  string user_id = 1;
+  string name = 2;
+}
+
+message DeleteWatchlistRequest {
+  string watchlist_id = 1;
+}
+
+message AddTickerRequest {
+  string watchlist_id = 1;
+  string ticker_symbol = 2;
+}
+
+message RemoveTickerRequest {
+  string watchlist_id = 1;
+  string ticker_symbol = 2;
+}
+
+message GetUserWatchlistsRequest {
+  string user_id = 1;
+}
+
+message WatchlistResponse {
+  string id = 1;
+  string name = 2;
+  repeated string tickers = 3;
+  string status = 4;
+}
+
+message UserWatchlistsResponse {
+  repeated WatchlistResponse watchlists = 1;
+}

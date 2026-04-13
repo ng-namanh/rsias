@@ -5,10 +5,14 @@
   "scripts": {
     "infra": "docker-compose up -d",
     "infra:stop": "docker-compose down",
-    "backend": "cd backend && go run cmd/bff/main.go",
-    "ai": "cd ai-worker && uv run main.py",
+    "migrate": "cd backend && go run cmd/migrate/main.go",
+    "bff": "cd backend && go run cmd/bff/main.go",
+    "producer": "cd backend && go run cmd/producer/news/main.go",
+    "producer:fund": "cd backend && go run cmd/producer/fundamentals/main.go",
+    "persistence": "cd backend && go run cmd/persistence/main.go",
+    "ai": "cd ai-worker && uv run src/intelligence_worker.py",
     "frontend": "cd frontend && bun dev",
-    "dev": "bun run infra && bun x concurrently --kill-others -n \"BACKEND,AI,FRONTEND\" -c \"cyan,green,blue\" \"bun run backend\" \"bun run ai\" \"bun run frontend\"",
+    "dev": "bun run infra && until docker exec rsias-postgres-1 pg_isready -U rsias_user -d rsias_db -p 5432; do echo 'Waiting for PostgreSQL...'; sleep 2; done && bun run migrate && bun x concurrently --kill-others -n \"BFF,PROD,FUND,PERS,AI,FRONT\" -c \"cyan,magenta,red,yellow,green,blue\" \"bun run bff\" \"bun run producer\" \"bun run producer:fund\" \"bun run persistence\" \"bun run ai\" \"bun run frontend\"",
     "test:all": "bun x concurrently \"cd backend && go test ./...\" \"cd ai-worker && pytest\" \"cd frontend && bun test\""
   },
   "devDependencies": {

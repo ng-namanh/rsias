@@ -1,0 +1,15 @@
+node_modules/
+.git/
+Dockerfile*
+.dockerignore
+*.log*
+.env*
+coverage/
+backend/bin/
+backend/vendor/
+ai-worker/.venv/
+ai-worker/__pycache__/
+frontend/dist/
+frontend/node_modules/
+.vscode/
+.idea/

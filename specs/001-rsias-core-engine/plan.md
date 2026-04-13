@@ -1,61 +1,32 @@
-# Implementation Plan: RSIAS Core Engine
+# Implementation Plan: RSIAS Core Engine (MVP: Intelligence First)
 
-**Branch**: `001-rsias-core-engine` | **Date**: 2026-04-07 | **Spec**: [specs/001-rsias-core-engine/spec.md](spec.md)
-**Input**: Feature specification from `/specs/001-rsias-core-engine/spec.md`
+**Branch**: `001-rsias-core-engine` | **Date**: 2026-04-09 | **Spec**: [specs/001-rsias-core-engine/spec.md]
+**Input**: Feature specification from `specs/001-rsias-core-engine/spec.md`
 
 ## Summary
-Implement a high-performance, two-language microservices system for real-time stock and news analysis. The system uses Golang for all core backend logic, including API Gateway, Authentication, and the Backend-for-Frontend (BFF) WebSocket management. Python is dedicated to the AI/NLP pipeline, including ensemble sentiment and RAG-based risk assessment.
+The "Intelligence First" MVP delivers a high-signal news platform. It utilizes a Go-based ingestion and real-time broadcasting layer combined with a Python AI pipeline for news categorization and trust scoring. The system persists data in a relational PostgreSQL schema and visualizes market intelligence through a React-based Global News Heatmap and Enriched News Feed.
 
 ## Technical Context
 
-**Language/Version**: 
-- **Golang**: 1.21+ (API Gateway, BFF, WebSockets, Core Logic)
-- **Python**: 3.11+ (AI/NLP/RAG Pipelines)
-- **React**: (Vite) Frontend (Bun) + **shadcn/ui** + **Tailwind CSS**
-- **Linting/Formatting**: **Biome** (Frontend)
-- **Typography**: JetBrains Mono, Monaspace
-- **Primary Color**: Orange
-**Primary Dependencies**: 
-- **Messaging**: Apache Kafka (Durable event streaming)
-- **Communication**: gRPC (Protobuf), WebSockets (Go-native)
-- **AI Models**: DeBERTa, RoBERTa, FinBERT (Ensemble)
-- **RAG**: LangChain
-**Storage**: 
-- **Primary**: PostgreSQL 15+ (TimescaleDB for time-series, pgvector for vector embeddings)
-- **Caching**: Redis (Price snapshots, Result backend)
-**Testing**: 
-- **Go**: go test
-- **Python**: pytest
-- **React**: bun test
-
-## Feature Set (World Monitor Reference)
-- **Global Heatmap**: Interactive world map visualizing financial sentiment and economic impact.
-- **News Broadcast**: Real-time news feed filterable by country and asset class (Crypto, Gold, Indices).
-- **AI Insights**: Contextual regional analysis per economic zone.
-- **Economic Indicators**: Tracking global indices, currencies, and precious metals.
-- **News Intelligence & Trust Scoring**: 
-    - **Political Bias Classification**: Categorizing sources/articles (Far-Left to Far-Right, Extremism detection, Neutrality).
-    - **AI Fact Verification**: Real-time cross-referencing to detect fake news or misinformation.
-    - **Source Reliability Index**: Historical tracking of source accuracy.
-- **Fundamental Business Intelligence (Inspired by Token Terminal)**:
-    - **Live Financial Ratios**: Real-time tracking of P/E, P/S, and EPS for stocks (and P/F for tokens).
-    - **Sector Benchmarking**: Comparing performance metrics (Revenue, Daily Users) across industry peers.
-    - **Corporate Vitality**: Tracking patent filings, hiring trends, and R&D spend as health indicators.
-    - **Unified Health Score**: AI-generated score combining fundamentals, sentiment, and technicals.
-**Target Platform**: Kubernetes / Cloud Native
-**Project Type**: Polyglot Microservices System (Go + Python)
-**Performance Goals**: < 100ms P95 tick-to-UI latency; sub-3s for complex AI reports.
-**Constraints**: Sub-50ms core routing; ACID compliance for financial records.
-**Scale/Scope**: 5,000+ concurrent users; Global market data ingestion.
+**Language/Version**: Go 1.21+, Python 3.11+, TypeScript 5+
+**Primary Dependencies**: `gorilla/websocket`, `segmentio/kafka-go`, `jackc/pgx/v5` (Go); `openai`, `confluent-kafka` (Python); `React`, `Vite`, `Tailwind CSS` (Frontend)
+**Storage**: PostgreSQL 15+ (TimescaleDB, pgvector)
+**Testing**: `go test`, `pytest`, `bun test`
+**Target Platform**: Linux/Docker
+**Project Type**: Real-time AI Intelligence Platform
+**Performance Goals**: News-to-UI latency < 5s; Heatmap load < 2s
+**Constraints**: Free-tier API limits (Alpha Vantage/NewsAPI); Single-call LLM analysis
+**Scale/Scope**: 10-20 primary tickers; 5,000+ concurrent WebSocket connections
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+*GATE: Passed. Architecture aligns with Go/Python polyglot and Kafka-centric principles.*
 
-- [x] **Polyglot Compliance**: Go handles all routing/WebSockets; Python handles AI. Node.js removed.
-- [x] **Communication Compliance**: Kafka is used for async streaming; gRPC for internal sync calls between Go and Python.
-- [x] **Storage Compliance**: PostgreSQL (TimescaleDB + pgvector) is the primary store; Redis for caching.
-- [x] **AI Alignment**: Hybrid NER and Ensemble Sentiment strategies adopted.
+1. **Polyglot Architecture**: PASS (Go for BFF/WebSockets, Python for AI).
+2. **Hybrid Communication**: PASS (Kafka for ingestion, WebSockets for UI).
+3. **Unified Data Strategy**: PASS (PostgreSQL/TimescaleDB/pgvector).
+4. **Real-time Precision**: PASS (Go WebSockets).
+5. **Robust AI Pipeline**: PASS (LLM-based Trust & Sentiment scoring).
 
 ## Project Structure
 
@@ -63,49 +34,65 @@ Implement a high-performance, two-language microservices system for real-time st
 
 ```text
 specs/001-rsias-core-engine/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command)
+├── plan.md              # This file
+├── research.md          # Research findings (Trust Algorithm, API Polling)
+├── data-model.md        # Relational schema (Companies, News, Intelligence)
+├── quickstart.md        # Setup guide
+├── contracts/           # Interface definitions
+│   ├── frontend_ws.json
+│   └── fundamentals_api.json
+└── tasks.md             # Implementation tasks (Next Step)
 ```
 
-### Source Code (repository root)
+### Source Code
 
 ```text
-backend/ (Golang)
+backend/
 ├── cmd/
-│   ├── gateway/ (API Gateway + Auth)
-│   └── bff/ (WebSocket Manager + Data Aggregator)
+│   ├── bff/             # WebSocket broadcasting & API Gateway
+│   ├── producer/        # News & Fundamentals ingestion (Go)
+│   └── migrate/         # DB schema migrations
 ├── internal/
-│   ├── models/
-│   ├── services/
-│   └── grpc/
+│   ├── models/          # Relational Go structs
+│   └── services/        # Kafka consumers & persistence workers
 └── tests/
 
-ai-worker/ (Python)
+ai-worker/
 ├── src/
-│   ├── ensemble/
-│   ├── rag/
-│   └── ner/
+│   ├── intelligence_worker.py # AI Pipeline (Categorization, Trust Scoring)
+│   └── shared/
 └── tests/
 
-frontend/ (React Vite)
+frontend/
 ├── src/
-│   ├── components/
-│   ├── store/
-│   └── hooks/
+│   ├── components/      # Heatmap, NewsFeed, FundamentalsSidebar
+│   ├── hooks/           # useMarketStream, useFundamentals
+│   └── store/           # Redux/Zustand for intelligence state
 └── tests/
 
 shared/
-└── proto/ (gRPC Definitions)
+└── proto/               # gRPC definitions (if needed for Phase 2)
 ```
 
-**Structure Decision**: Consolidated Go backend with separate entry points for Gateway and BFF/WebSocket management. AI services remain isolated in Python.
+**Structure Decision**: Polyglot Monorepo. Decoupled services (Ingestion, AI, BFF) communicate via Kafka topics, ensuring scalability and fault tolerance.
+
+## Implementation Phases
+
+### Phase 0: Research (DONE)
+- Resolved Trust Scoring logic, API polling strategy, and DB driver selection.
+
+### Phase 1: Design & Contracts (DONE)
+- Defined relational schema, WebSocket contracts, and REST endpoints.
+
+### Phase 2: Implementation (NEXT)
+- Initialize PostgreSQL schema.
+- Implement Go news producer with staggered polling.
+- Implement Python intelligence worker with GPT-4o-mini.
+- Develop React Heatmap and Enriched News components.
 
 ## Complexity Tracking
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| None      | N/A        | N/A                                 |
+| Kafka for MVP | Real-time decoupled processing | Simple HTTP callbacks lack durability and easy multi-consumer scaling. |
+| PostgreSQL JSONB | Storing AI rationale metadata | Flattening fields would make rationale updates rigid and schema-heavy. |

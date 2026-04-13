@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -23,7 +24,7 @@ var (
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Printf("Error upgrading to WebSocket: %v", err)
+	log.Printf("Error upgrading to WebSocket: %v", err)
 		return
 	}
 	defer conn.Close()
@@ -83,9 +84,20 @@ func main() {
 
 	// Start Kafka consumers for ticks and news in parallel
 	go consumeAndBroadcast(ctx, brokers, "market.ticks")
-	go consumeAndBroadcast(ctx, brokers, "news.ingested")
+	go consumeAndBroadcast(ctx, brokers, "news.enriched")
+	go consumeAndBroadcast(ctx, brokers, "news.fundamentals")
 
 	http.HandleFunc("/ws", handleWebSocket)
+
+	http.HandleFunc("/api/v1/companies/", func(w http.ResponseWriter, r *http.Request) {
+		// Basic routing for /api/v1/companies/:symbol/fundamentals
+		// In a real app, use a router like chi or gorilla/mux
+		path := r.URL.Path
+		log.Printf("BFF: Received request %s", path)
+		// ... logic to parse and return fundamentals from database or cache
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintf(w, `{"symbol": "AAPL", "name": "Apple Inc.", "market_cap": 2800000000000, "pe_ratio": 28.5, "revenue_growth": 11.2}`)
+	})
 
 	log.Println("BFF WebSocket server starting on :8081")
 	if err := http.ListenAndServe(":8081", nil); err != nil {

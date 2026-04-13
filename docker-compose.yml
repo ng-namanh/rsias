@@ -1,12 +1,12 @@
 services:
   postgres:
-    image: timescale/timescaledb-ha:pg15-oss
+    image: timescale/timescaledb:latest-pg15
     environment:
       POSTGRES_USER: rsias_user
       POSTGRES_PASSWORD: rsias_password
       POSTGRES_DB: rsias_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -47,6 +47,16 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+
+  kafka-setup:
+    image: apache/kafka:latest
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command: >
+      bash -c "/opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic news.raw --partitions 3 --replication-factor 1 && 
+               /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic news.enriched --partitions 3 --replication-factor 1 && 
+               /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --create --if-not-exists --topic news.fundamentals --partitions 1 --replication-factor 1"
 
 volumes:
   postgres_data:

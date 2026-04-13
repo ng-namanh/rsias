@@ -1,48 +1,56 @@
-# Quickstart: RSIAS Core Engine
+# Quickstart: RSIAS Core Engine (MVP)
 
 ## Prerequisites
-- Docker & Docker Compose
-- Golang 1.21+
-- Python 3.11+ (with `uv` or `pip`)
-- PostgreSQL 15+ (with TimescaleDB and pgvector extensions)
-- Apache Kafka
+- **Docker & Docker-Compose**: For PostgreSQL, Kafka, and Redis.
+- **Go 1.21+**: For backend services.
+- **Python 3.11+**: For the AI worker.
+- **Bun/Node.js**: For the React frontend.
+- **API Keys**:
+    - `ALPHA_VANTAGE_API_KEY`: For news and fundamentals.
+    - `OPENAI_API_KEY`: For intelligence analysis.
 
-## Environment Setup
-1. **Infrastructure**:
+## Infrastructure Setup
+```bash
+docker-compose up -d
+```
+
+## Backend Services (Go)
+1. **Initialize Database**:
    ```bash
-   docker-compose up -d postgres kafka redis
+   cd backend && go run cmd/migrate/main.go
    ```
-2. **Database Migration**:
-   Run the migrations in `backend/migrations` to set up Hypertables and vector columns.
+2. **Start Ingestion Producer**:
+   ```bash
+   cd backend && go run cmd/producer/main.go
+   ```
+3. **Start BFF (WebSocket)**:
+   ```bash
+   cd backend && go run cmd/bff/main.go
+   ```
 
-## Local Development
-### 1. Backend Service (Golang)
-```bash
-cd backend
-go mod download
-# Run Gateway
-go run cmd/gateway/main.go
-# Run BFF/WebSocket Manager
-go run cmd/bff/main.go
-```
+## AI Worker (Python)
+1. **Setup Virtual Env**:
+   ```bash
+   cd ai-worker && uv sync
+   ```
+2. **Start Intelligence Worker**:
+   ```bash
+   cd ai-worker && uv run src/intelligence_worker.py
+   ```
 
-### 2. AI Worker (Python)
-```bash
-cd ai-worker
-uv venv
-source .venv/bin/activate
-uv pip install -r requirements.txt
-python main.py
-```
+## Frontend (React)
+1. **Install Dependencies**:
+   ```bash
+   cd frontend && bun install
+   ```
+2. **Start Dev Server**:
+   ```bash
+   cd frontend && bun dev
+   ```
 
-### 3. Frontend (React)
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Verifying the Setup
-- **API Health**: `curl http://localhost:8080/health`
-- **WebSocket Stream**: Connect to `ws://localhost:4000/v1/stream` (BFF) to see live ticks.
-- **AI Inference**: Check logs in `ai-worker` to ensure sentiment analysis is firing on `news.ingested` Kafka topics.
+## Verification
+- Open `http://localhost:5173` to view the dashboard.
+- Check Kafka topics for data flow:
+  ```bash
+  docker exec -it kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic news.enriched --from-beginning
+  ```

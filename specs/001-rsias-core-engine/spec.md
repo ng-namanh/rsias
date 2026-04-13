@@ -1,94 +1,73 @@
-# Feature Specification: RSIAS Core Engine
+# Feature Specification: RSIAS Core Engine (MVP: Intelligence First)
 
 **Feature Branch**: `001-rsias-core-engine`  
-**Created**: 2026-04-07  
-**Status**: Draft  
-**Input**: User description: "A real-time AI-based stock impact assessment system that collects market data and news globally, analyzes sentiments using an ensemble of LLMs, and evaluates macroeconomic/geopolitical risk to provide actionable stock insights via a real-time dashboard."
+**Milestone**: 1 (MVP)  
+**Status**: Approved (MVP Scope)  
 
-## User Scenarios & Testing *(mandatory)*
-
-### User Story 1 - Real-time Price & News Monitoring (Priority: P1)
-
-As a financial analyst, I want to see a live dashboard of stock prices and global news so that I can stay informed of market movements as they happen.
-
-**Why this priority**: Real-time data is the foundation of the system. Without live prices and news, the AI analysis cannot provide timely insights.
-
-**Independent Test**: Can be tested by connecting to a market data provider and verifying that price updates and news headlines appear on the dashboard with sub-second latency.
-
-**Acceptance Scenarios**:
-
-1. **Given** the dashboard is open, **When** a stock price changes at the source, **Then** the UI updates the price in real-time (sub-500ms).
-2. **Given** a new global news article is published, **When** the system ingests it, **Then** it appears in the news feed immediately.
+## Overview
+A news-centric intelligence platform that prioritizes high-signal data over raw market noise. The MVP focuses on analyzing news credibility (Trust Scoring), providing company context (Business Fundamentals), and visualizing global news intensity (Category Heatmap).
 
 ---
 
-### User Story 2 - AI-Driven Sentiment & Impact Analysis (Priority: P1)
+## User Scenarios & Testing
 
-As an investor, I want to see an AI-generated sentiment score and impact assessment for a specific stock so that I can understand how news affects its potential performance.
-
-**Why this priority**: This is the core value proposition of RSIAS—transforming raw news into actionable intelligence.
-
-**Independent Test**: Can be tested by selecting a stock with recent news and verifying that the system displays a sentiment score (Bullish/Bearish/Neutral) and a brief impact rationale.
+### User Story 1 - News Intelligence & Trust Scoring (Priority: P1)
+As a financial analyst, I want to see an AI-generated **Trust Score** for each news article so that I can quickly filter out "fake news" or low-credibility sources.
 
 **Acceptance Scenarios**:
-
-1. **Given** a stock has multiple recent news articles, **When** the AI pipeline processes them, **Then** it generates a consolidated sentiment score.
-2. **Given** a high-impact news event (e.g., earnings beat), **When** the analysis is performed, **Then** the system highlights the "Impact Assessment" with specific rationales.
+1. **Given** a news article is ingested, **When** the AI worker processes it, **Then** it assigns a Trust Score (0-100) and a brief rationale.
+2. **Given** a high-credibility source (e.g., Bloomberg), **When** analyzed, **Then** the Trust Score should reflect its historical reliability.
 
 ---
 
-### User Story 3 - Macroeconomic & Geopolitical Risk Evaluation (Priority: P2)
-
-As a portfolio manager, I want to understand how national policies (taxes, trade) and geopolitical events affect my stocks so that I can manage long-term risk.
-
-**Why this priority**: Adds depth to the analysis by considering broader market regimes and policy shifts.
-
-**Independent Test**: Can be tested by querying a stock affected by a specific policy and verifying that the AI cites relevant policy data in its risk report.
+### User Story 2 - Fundamental Business Intelligence (Priority: P1)
+As an investor, I want to see key company metrics (Market Cap, P/E, Debt/Equity) alongside related news so that I can evaluate the news within the context of the company's financial health.
 
 **Acceptance Scenarios**:
-
-1. **Given** a change in national interest rates, **When** I view the risk profile for an affected sector, **Then** the system explains the macro impact using retrieved policy data.
-2. **Given** a geopolitical conflict, **When** I check a stock with supply chain exposure, **Then** the system identifies the specific risk factors.
+1. **Given** I am viewing news for a specific ticker (e.g., AAPL), **When** the dashboard loads, **Then** the sidebar displays its current fundamental "Snapshot."
+2. **Given** a news article mentions multiple companies, **When** selected, **Then** the fundamentals for those companies are easily accessible.
 
 ---
 
-### Edge Cases
+### User Story 3 - Global News Category Heatmap (Priority: P2)
+As a portfolio manager, I want to see a **Global News Heatmap** categorizing recent news (e.g., Macro, Geopolitical, Tech, ESG) so that I can identify which sectors or themes are currently driving market sentiment.
 
-- **Market Data Outage**: What happens when the primary market data connection fails? (System MUST failover to a secondary source or notify the user).
-- **Ambiguous News**: How does the system handle conflicting news sentiments (e.g., one positive, one negative article)? (System SHOULD provide a weighted average or highlight the conflict).
-- **Rate Limiting**: How does the system handle API rate limits from external data providers? (System MUST implement robust queuing and caching).
+**Acceptance Scenarios**:
+1. **Given** the dashboard is open, **When** new articles arrive, **Then** the heatmap updates its intensity/color based on volume and sentiment in each category.
+2. **Given** a category in the heatmap is clicked, **When** active, **Then** the news feed filters to show only articles in that category.
 
-## Requirements *(mandatory)*
+---
 
-### Functional Requirements
+## Functional Requirements
 
-- **FR-001**: System MUST ingest real-time tick-level stock data via a persistent low-latency connection.
-- **FR-002**: System MUST collect global news from multiple professional financial sources continuously.
-- **FR-003**: System MUST identify and map entities (Companies, Tickers) in news articles using an advanced entity recognition approach.
-- **FR-004**: System MUST perform sentiment analysis using an ensemble of specialized financial language models.
-- **FR-005**: System MUST store price and sentiment data as time-series for historical trend analysis.
-- **FR-006**: System MUST provide a retrieval-based query interface for macroeconomic and policy risk assessment.
-- **FR-007**: System MUST push real-time updates to the frontend dashboard.
+- **FR-001: News Ingestion**: System MUST fetch news for a target list of tickers from at least one professional source (e.g., NewsAPI or Alpha Vantage).
+- **FR-002: AI Intelligence Analysis**: System MUST use an LLM (e.g., GPT-4o-mini) to categorize news and generate both Sentiment and Trust scores.
+- **FR-003: Fundamental Data Collection**: System MUST fetch and store core company fundamentals (Market Cap, P/E Ratio, Revenue Growth).
+- **FR-004: Real-time Broadcasting**: System MUST stream "Enriched News" (Headline + Sentiment + Trust + Category) to the frontend via WebSockets.
+- **FR-005: Relational Persistence**: System MUST store all companies, articles, and AI assessments in a PostgreSQL relational database.
 
-### Key Entities *(include if feature involves data)*
+---
 
-- **StockTicker**: Represents a tradable security (Symbol, Exchange, Current Price, Industry).
-- **NewsArticle**: Represents a financial news item (Title, Content, Source, Timestamp, Related Tickers).
-- **SentimentReport**: Represents the AI assessment (Score, Rationale, Confidence, Model Ensemble Weights).
-- **MacroEvent**: Represents a policy or geopolitical shift (Type, Region, Impact Level, Related Sectors).
+## Relational Data Model
 
-## Success Criteria *(mandatory)*
+### Entities
+- **Companies**: `id`, `symbol`, `name`, `sector`, `industry`, `market_cap`, `pe_ratio`, `revenue_growth`, `updated_at`.
+- **NewsCategories**: `id`, `name` (e.g., 'Macro', 'Geopolitical', 'Tech'), `description`.
+- **NewsArticles**: `id`, `company_id`, `category_id`, `source_name`, `headline`, `content_summary`, `url`, `published_at`.
+- **NewsIntelligence**: `id`, `news_article_id`, `sentiment_score` (-1 to 1), `trust_score` (0-1), `rationale`, `confidence_level`.
 
-### Measurable Outcomes
+---
 
-- **SC-001**: Market data latency from source ingestion to UI update is under 100ms for 95% of ticks.
-- **SC-002**: AI Sentiment analysis achieves at least 75% accuracy compared to expert-labeled financial datasets.
-- **SC-003**: System supports 5,000+ concurrent users receiving real-time updates without dashboard lag.
-- **SC-004**: Users can generate a comprehensive "Policy Risk Report" for any stock in under 3 seconds.
+## Success Criteria
 
-## Assumptions
+- **SC-001**: AI-generated Trust Score aligns with expert credibility assessment in >80% of test cases.
+- **SC-002**: Company fundamental data is updated at least once every 24 hours.
+- **SC-003**: Dashboard renders the Global News Heatmap with sub-2s initial load time.
+- **SC-004**: News-to-UI latency (including AI analysis) is under 5 seconds for 90% of articles.
 
-- **Connectivity**: Users have a stable internet connection for real-time WebSocket updates.
-- **API Availability**: External providers (Polygon, FactSet) maintain 99.9% uptime.
-- **Language**: Initial release focuses on English-language news and major global exchanges.
-- **Authentication**: User authentication and subscription management are handled by a shared identity service.
+---
+
+## Technical Constraints & Assumptions
+- **API Limits**: MVP will use free/developer tier APIs, which may limit the number of tickers tracked (Target: 10-20 tickers).
+- **AI Model**: Primary analysis will use a single LLM API call to balance cost and speed for the MVP.
+- **Database**: PostgreSQL 15+ will be the primary data store.

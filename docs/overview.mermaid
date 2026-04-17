@@ -1,0 +1,59 @@
+graph TD
+    subgraph Header ["Global Header"]
+        H_Search["Global Search Bar (Auto-suggest/Filters)"]
+        H_Context["Context-Aware Actions"]
+        H_Notify["Notification Center"]
+        H_User["User Profile Access"]
+    end
+
+    subgraph Sidebar ["Navigation Sidebar (Collapsible)"]
+        subgraph G1 ["Market Discovery"]
+            N1["News (Real-time Updates)"]
+            N2["Market (Forex, Crypto, ETF, Equities)"]
+            N3["Companies (Sector/Region/Industry)"]
+            N4["Market Insights (Deep-dive Analysis)"]
+        end
+        subgraph G2 ["Personal Workspace"]
+            N5["Portfolio (Investment Tracking)"]
+            N6["Wishlist (Bookmarked Assets)"]
+        end
+        subgraph G3 ["AI Tools"]
+            N7["AI Analysis (Prompt/Command Entry)"]
+            N8["Report Archive (History)"]
+        end
+    end
+
+    subgraph MainContent ["Main Dashboard View"]
+        subgraph CardSystem ["Card Component System"]
+            C1["Metric Card: Price, Change %, Mini-Chart"]
+            C2["News Card: Image, Headline, Timestamp"]
+            C3["AI Summary Card: Key Takeaways, Sentiment"]
+        end
+
+        subgraph DataTable ["Financial Data Table (Compact)"]
+            T1["Sticky Header: Ticker, Price, Market Cap, Volume"]
+            T2["Row: High-density Data Cells"]
+            T3["Footer: Pagination & Sorting Controls"]
+        end
+
+        subgraph ButtonSystem ["Button UI Library"]
+            B1["Primary / Secondary / Outline"]
+            B2["Ghost / Danger"]
+            B3["States: Hover, Active, Disabled, Loading"]
+        end
+    end
+
+    H_Search --> MainContent
+    Sidebar --> MainContent
+    N2 --> DataTable
+    N7 --> C3
+    N1 --> C2
+
+    style Header fill:#f9f9fb,stroke:#d1d5db,stroke-width:2px
+    style Sidebar fill:#f3f4f6,stroke:#d1d5db,stroke-width:2px
+    style MainContent fill:#ffffff,stroke:#d1d5db,stroke-width:2px
+    style DataTable fill:#fff,stroke:#e5e7eb,stroke-width:1px
+    style CardSystem fill:#f8fafc,stroke:#e2e8f0
+    style G1 fill:#eff6ff,stroke:#bfdbfe
+    style G2 fill:#f0fdf4,stroke:#bbf7d0
+    style G3 fill:#faf5ff,stroke:#e9d5ff

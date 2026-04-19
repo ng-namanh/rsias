@@ -1,8 +1,12 @@
 # RSIAS Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-10
+Auto-generated from all feature plans. Last updated: 2026-04-13
 
 ## Active Technologies
+- Golang 1.21+ (Backend/BFF), TypeScript 5+ (Frontend/React) + `github.com/segmentio/kafka-go` (Kafka), `google.golang.org/grpc` (gRPC), `shadcn/ui`, `recharts` (for P&L visualization) (003-realtime-portfolio-dashboard)
+- PostgreSQL 15+ (TimescaleDB for portfolio snapshots), Redis (volatile session/price cache) (003-realtime-portfolio-dashboard)
+- Golang 1.21+ (Backend), TypeScript 5+ (Frontend) + `github.com/segmentio/kafka-go` (for ticker streams), `shadcn/ui` (for UI composition) (002-custom-watchlists)
+- PostgreSQL 15+ (Relational storage for Watchlist/WatchlistTicker), Redis (caching active watchlist state) (002-custom-watchlists)
 
 - **Backend (Core/Real-time)**: Golang 1.21+
 - **AI/ML Services**: Python 3.11+
@@ -67,9 +71,10 @@ shared/
 - **Protobuf**: Use `buf` for linting and generating code.
 
 ## Recent Changes
+- 002-custom-watchlists: Added Golang 1.21+ (Backend), TypeScript 5+ (Frontend) + `github.com/segmentio/kafka-go` (for ticker streams), `shadcn/ui` (for UI composition)
+- 003-realtime-portfolio-dashboard: Added Golang 1.21+ (Backend/BFF), TypeScript 5+ (Frontend/React) + `github.com/segmentio/kafka-go` (Kafka), `google.golang.org/grpc` (gRPC), `shadcn/ui`, `recharts` (for P&L visualization)
 - 001-rsias-core-engine: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
-- **001-rsias-core-engine**: Initial architecture defined. Removed Node.js, consolidated real-time logic into Golang.
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

@@ -1,0 +1,47 @@
+package news
+
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+// NewsCategory represents a classification for news articles.
+type NewsCategory struct {
+	ID          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+}
+
+// NewsArticle represents a financial news article.
+type NewsArticle struct {
+	ID             uuid.UUID  `json:"id"`
+	CompanyID      *uuid.UUID `json:"company_id"`
+	CategoryID     *uuid.UUID `json:"category_id"`
+	SourceName     string     `json:"source_name"`
+	Headline       string     `json:"headline"`
+	ContentSummary string     `json:"content_summary"`
+	URL            string     `json:"url"`
+	PublishedAt    time.Time  `json:"published_at"`
+	CreatedAt      time.Time  `json:"created_at"`
+}
+
+// NewsIntelligence represents AI-generated analysis for a news article.
+type NewsIntelligence struct {
+	ID              uuid.UUID `json:"id"`
+	NewsArticleID   uuid.UUID `json:"news_article_id"`
+	SentimentScore  float64   `json:"sentiment_score"`
+	TrustScore      float64   `json:"trust_score"`
+	Rationale       any       `json:"rationale"` // JSONB
+	ConfidenceLevel *float64  `json:"confidence_level"`
+	ModelVersion    string    `json:"model_version"`
+	CreatedAt       time.Time `json:"created_at"`
+}
+
+// EnrichedNews combines a news article with its intelligence data.
+type EnrichedNews struct {
+	NewsArticle
+	Category      *string           `json:"category"`
+	CompanySymbol *string           `json:"company_symbol"`
+	Intelligence  *NewsIntelligence `json:"intelligence"`
+}

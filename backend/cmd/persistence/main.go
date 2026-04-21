@@ -7,30 +7,25 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/jackc/pgx/v5"
-	"github.com/ng-namanh/rsias/backend/internal/services/news_persistence"
+	"github.com/ng-namanh/rsias/backend/internal/news"
+	"github.com/ng-namanh/rsias/backend/internal/shared/config"
+	"github.com/ng-namanh/rsias/backend/internal/shared/database"
 )
 
 func main() {
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		dbURL = "postgres://rsias_user:rsias_password@localhost:5433/rsias_db"
-	}
-	kafkaBrokers := os.Getenv("KAFKA_BROKERS")
-	if kafkaBrokers == "" {
-		kafkaBrokers = "localhost:9092"
-	}
+	cfg := config.Load()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	conn, err := pgx.Connect(ctx, dbURL)
+	pool, err := database.NewPostgresPool(ctx, cfg.DatabaseURL)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
-	defer conn.Close(ctx)
+	defer pool.Close()
 
-	worker := news_persistence.NewNewsPersistenceWorker([]string{kafkaBrokers}, "news.enriched", conn)
+	brokers := []string{cfg.KafkaBrokers}
+	worker := news.NewPersistenceWorker(brokers, "news.enriched", pool)
 	defer worker.Close()
 
 	sigChan := make(chan os.Signal, 1)

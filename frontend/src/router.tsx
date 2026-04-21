@@ -8,9 +8,10 @@ import { Route as rootRoute } from './routes/__root'
 // ── Page components (lazy-friendly stubs) ────────────────────────────────────
 import React from 'react'
 import {
-  Newspaper, BarChart2, Building2, TrendingUp,
+  Newspaper, Building2, TrendingUp,
   Briefcase, Star, Bot, Archive,
 } from 'lucide-react'
+import { MarketDashboard } from './pages/MarketDashboard'
 
 function PageStub({ icon: Icon, title, description, accent }: {
   icon: React.ElementType
@@ -54,7 +55,7 @@ const newsRoute = createRoute({
 const marketRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/market',
-  component: () => <PageStub icon={BarChart2} title="Market" description="Comprehensive list of market instruments — currencies, crypto, ETFs, and equities." />,
+  component: MarketDashboard,
 })
 
 const companiesRoute = createRoute({

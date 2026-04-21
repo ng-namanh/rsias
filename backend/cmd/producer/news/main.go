@@ -9,17 +9,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ng-namanh/rsias/backend/internal/models"
-	"github.com/ng-namanh/rsias/backend/internal/services"
+	"github.com/ng-namanh/rsias/backend/internal/news"
+	"github.com/ng-namanh/rsias/backend/internal/shared/config"
+	"github.com/ng-namanh/rsias/backend/internal/shared/kafka"
 )
 
 func main() {
-	kafkaBrokers := os.Getenv("KAFKA_BROKERS")
-	if kafkaBrokers == "" {
-		kafkaBrokers = "localhost:9092"
-	}
+	cfg := config.Load()
 
-	producer := services.NewKafkaProducer([]string{kafkaBrokers}, "news.raw")
+	producer := kafka.NewProducer([]string{cfg.KafkaBrokers}, "news.raw")
 	defer producer.Close()
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -49,10 +47,10 @@ func main() {
 	}
 }
 
-func fetchAndProduceNews(ctx context.Context, producer *services.KafkaProducer) {
+func fetchAndProduceNews(ctx context.Context, producer *kafka.Producer) {
 	// Mock fetching news for now
 	// In reality, this would call Alpha Vantage or NewsAPI
-	mockNews := []models.NewsArticle{
+	mockNews := []news.NewsArticle{
 		{
 			SourceName:  "MarketWatch",
 			Headline:    "Tech Stocks Rally on Innovation Hopes",

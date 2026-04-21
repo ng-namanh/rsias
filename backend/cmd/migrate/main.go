@@ -9,16 +9,14 @@ import (
 	"sort"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/ng-namanh/rsias/backend/internal/shared/config"
 )
 
 func main() {
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		dbURL = "postgres://rsias_user:rsias_password@localhost:5433/rsias_db"
-	}
+	cfg := config.Load()
 
 	ctx := context.Background()
-	conn, err := pgx.Connect(ctx, dbURL)
+	conn, err := pgx.Connect(ctx, cfg.DatabaseURL)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
